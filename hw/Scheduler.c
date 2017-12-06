@@ -49,7 +49,7 @@ void            __ContextSwitch(Thread* pCurThread, Thread* pNewThread)
 	
 	printf("%u hey wake up!!\n", (unsigned int)pthread_self());
 	__thread_wakeup(pCurThread);
-	
+	printf("%u hey wake up!!\n", (unsigned int)pthread_self());
 	ReadyQHead=pCurThread->pNext;
 	if(ReadyQHead == NULL)
 		ReadyQTail = NULL;
