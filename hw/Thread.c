@@ -15,9 +15,10 @@ int 	thread_create(thread_t *thread, thread_attr_t *attr, void *(*start_routine)
 	if((err=pthread_create(thread,attr,__wrapperFunc,&wrapperArg))!=0)
 		fprintf(stderr,"create fail\n");
 	InsertAtTail(1,*thread);
-	printf("create thead\n");
+	//printf("create thead(%u)\n", *thread);
 	sleep(2);
 	pthread_kill(*thread, SIGUSR1);
+	//PrintQ(1);
 
 }
 

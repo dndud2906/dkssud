@@ -16,13 +16,13 @@ int		RunScheduler( void )
 	{
 		if(ReadyQHead!=NULL)
 		{
-			printf("in\n");
+			//printf("in\n");
 			runThread=ReadyQHead;
-			printf("switch\n");
+			//printf("switch\n");
 			
 			__ContextSwitch(runThread,ReadyQHead->pNext);
 			
-			printf("switch end\n");
+			//printf("switch end\n");
 			sleep(TIMESLICE);
 		}
 		else
@@ -37,19 +37,20 @@ int		RunScheduler( void )
 
 void            __ContextSwitch(Thread* pCurThread, Thread* pNewThread)
 {
-
+	__thread_wakeup(pCurThread);
+	//printf("%u  ,   %u\n", pCurThread, pNewThread);
 	if(pNewThread == NULL)
 		return;	// no next
 	
 	pCurThread->status=THREAD_STATUS_READY;
-	pCurThread->bRunnable=FALSE;
+	pCurThread->bRunnable=TRUE;
 	pthread_kill(pCurThread->tid, SIGUSR1); // sleep running th
 	
 	pCurThread->status = THREAD_STATUS_RUN;	// running next th
 	
-	printf("%u hey wake up!!\n", (unsigned int)pthread_self());
-	__thread_wakeup(pCurThread);
-	printf("%u hey wake up!!\n", (unsigned int)pthread_self());
+	//printf("%u hey wake up!!\n", (unsigned int)pthread_self());
+	//__thread_wakeup(pCurThread);
+	//printf("%u hey wake up??\n", (unsigned int)pthread_self());
 	ReadyQHead=pCurThread->pNext;
 	if(ReadyQHead == NULL)
 		ReadyQTail = NULL;

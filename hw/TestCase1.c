@@ -34,15 +34,10 @@ TestCase1(void)
 	int i1=1, i2=2, i3=3, i4=4, i5=5;
 
   thread_create(&tid[0], NULL, (void*)Tc1ThreadProc, (void*)&i1);
-  printf("1\n");
   thread_create(&tid[1], NULL, (void*)Tc1ThreadProc, (void*)&i2);
-  printf("2\n");
   thread_create(&tid[2], NULL, (void*)Tc1ThreadProc, (void*)&i3);
-  printf("3\n");
   thread_create(&tid[3], NULL, (void*)Tc1ThreadProc, (void*)&i4);
-  printf("4\n");
   thread_create(&tid[4], NULL, (void*)Tc1ThreadProc, (void*)&i5);
-  printf("5\n");
 
 	while(1){}
 	

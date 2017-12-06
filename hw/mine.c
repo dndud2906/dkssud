@@ -155,16 +155,17 @@ void* __wrapperFunc(void* arg)
   sigset_t set;
   int retSig;  
   //sleep(1);
-  printf("wrap\n");
+ // printf("wrap(%u)\n", pthread_self());
   // child sleeps until TCB is initialized
   sigemptyset(&set);
   sigaddset(&set, SIGUSR1);
   signal(SIGUSR1, __thread_wait_handler);
-  printf("wait\n");
+ // printf("wait\n");
   sigwait(&set, &retSig);
   // child is ready to run 
-  printf("child run\n");
+  //printf("child run\n");
   __thread_wait_handler(0);
+//	printf("gogo function\n");
   ret = (*funcPtr)(funcArg);
   return ret;
 }
@@ -172,15 +173,18 @@ void* __wrapperFunc(void* arg)
 void __thread_wait_handler(int signo)
 {
    Thread* pTh;
-   printf("handler in\n");
+ //  printf("handler in\n");
    pTh = __getThread(pthread_self());
-   printf("self\n");
+   //printf("self\n");
    pthread_mutex_lock(&(pTh->readyMutex));
-   printf("lock\n");
-   while (pTh->bRunnable == FALSE)
+  // printf("lock\n");
+   while (pTh->bRunnable == FALSE){
+	   //printf("bye im sleeping(%u)\n", pthread_self());
       pthread_cond_wait(&(pTh->readyCond), &(pTh->readyMutex));
+	  // printf("bye im wake up!! hello\n");
+   }
    pthread_mutex_unlock(&(pTh->readyMutex));
-   printf("handler out\n");
+  // printf("handler out\n");
 }
 
 Thread* __getThread(thread_t tid)
@@ -223,5 +227,5 @@ void __thread_wakeup(Thread* pTh)
 	pTh->bRunnable = TRUE;
 	pthread_cond_signal(&(pTh->readyCond));
 	pthread_mutex_unlock(&(pTh->readyMutex));
-	printf("wake\n");
+	//printf("wake\n");
 }
